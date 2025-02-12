@@ -1,0 +1,6 @@
+{
+    "VITE_API_URL": "https://robobee.gr/index.php/wp-json/wc/v3",
+    "VITE_API_CS": "cs_1cf9cb5b540efd5a569a2d0df01857661421241e",
+    "VITE_API_CK": "ck_64db285ef0695da45784c88af616b0ce96fd8930",
+    "VITE_API_VERSION": "1.1.0"
+  }

@@ -2,8 +2,8 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
 import Grid from "@mui/material/Grid2";
 import Page404 from "./components/Page404";
-import Home from "./pages/Home";
-import Customers from "./pages/customers/customers";
+import Home from "./pages/orders/Home";
+import Customers from "./pages/customers/Customers";
 import TopNavBar from "./components/TopNavBar";
 
 function App() {

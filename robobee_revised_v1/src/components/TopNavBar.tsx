@@ -19,7 +19,8 @@ function TopNavbar() {
   useEffect(() => {
     const checkApiConnection = async () => {
       try {
-        const response = await axios.get(`$${API_URL}/status`, {
+        const response = await axios.get(`${API_URL}/system_status`, {
+          // Fixed URL string interpolation
           auth: {
             username: API_CK,
             password: API_CS,
@@ -42,16 +43,24 @@ function TopNavbar() {
   return (
     <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
       <Grid size="grow">
-      <Stack spacing={2} direction="row">
-        <Button variant="text" sx={{textTransform: "none" }} onClick={() => navigate("/")}>
-          Αρχική
-        </Button>
-        <Button variant="text" sx={{textTransform: "none" }} onClick={() => navigate("/customers")}>
-          Πελάτες
-        </Button>
-        <Button variant="text" sx={{textTransform: "none" }}>
-          ΤΒΑ
-        </Button>
+        <Stack spacing={2} direction="row">
+          <Button
+            variant="text"
+            sx={{ textTransform: "none" }}
+            onClick={() => navigate("/")}
+          >
+            Αρχική
+          </Button>
+          <Button
+            variant="text"
+            sx={{ textTransform: "none" }}
+            onClick={() => navigate("/customers")}
+          >
+            Πελάτες
+          </Button>
+          <Button variant="text" sx={{ textTransform: "none" }}>
+            ΤΒΑ
+          </Button>
         </Stack>
       </Grid>
       <Grid>

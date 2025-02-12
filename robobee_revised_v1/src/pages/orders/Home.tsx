@@ -1,3 +1,5 @@
+//NA PROSTHESW TIN ETAIRIA STA STOIXEIA
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../../../config.json";
@@ -14,6 +16,7 @@ import {
   TableRow,
   Paper,
   Fab,
+  CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
@@ -83,6 +86,7 @@ function Home() {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -99,6 +103,8 @@ function Home() {
         setOrders(response.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -323,7 +329,7 @@ function Home() {
             <Typography variant="h6" sx={{ mt: 2 }}>
               Επιλογές
             </Typography>
-            <Grid size={12} sx={{textAlign: 'right'}}>
+            <Grid size={12} sx={{ textAlign: "right" }}>
               <Fab
                 onClick={() => {
                   console.log("123");
@@ -353,7 +359,16 @@ function Home() {
         )}
       </Grid>
       <Grid size={4}>
-        {rows.length > 0 ? (
+        {loading ? (
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            style={{ height: "100%" }}
+          >
+            <CircularProgress />
+          </Grid>
+        ) : rows.length > 0 ? (
           <div>
             <Grid size={12}>
               <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>

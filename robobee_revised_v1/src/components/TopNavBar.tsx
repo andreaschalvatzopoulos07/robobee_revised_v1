@@ -1,6 +1,3 @@
-//NA PROSTHESW TIN ETAIRIA STA STOIXEIA 
-
-
 import { Typography, Box, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";

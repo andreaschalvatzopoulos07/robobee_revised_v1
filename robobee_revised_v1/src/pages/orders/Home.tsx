@@ -1,6 +1,6 @@
 //NA PROSTHESW TIN ETAIRIA STA STOIXEIA
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import config from "../../../config.json";
 import {
@@ -18,10 +18,13 @@ import {
   Fab,
   CircularProgress,
 } from "@mui/material";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
 import DvrIcon from "@mui/icons-material/Dvr";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import Orders_shipping_normal from "./Orders_shipping_normal";
 
 function Home() {
   const API_URL = config.VITE_API_URL;
@@ -88,6 +91,37 @@ function Home() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
+  //==========================================================
+
+  const contentRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
+
+  const handleDownloadAndPrintPdf = async () => {
+    if (!contentRef.current) return;
+
+    const canvas = await html2canvas(contentRef.current, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgWidth = 210; // A4 width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Keep aspect ratio
+
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+    // Άνοιγμα του PDF σε νέο παράθυρο και εκτύπωση
+    const pdfBlob = pdf.output("blob");
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    const printWindow = window.open(pdfUrl);
+
+    if (printWindow) {
+      printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+      };
+    }
+  };
+
+  //==========================================================
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -142,274 +176,284 @@ function Home() {
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid size={8}>
-        {selectedOrder && (
-          <Box component="form" noValidate autoComplete="off">
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Πληροφορίες Χρέωσης
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={4}>
-                <TextField
-                  label="Όνομα"
-                  value={`${selectedOrder.billing.first_name} ${selectedOrder.billing.last_name}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
+    <div>
+      {" "}
+      <Grid container spacing={2}>
+        <Grid size={8}>
+          {selectedOrder && (
+            <Box component="form" noValidate autoComplete="off">
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Πληροφορίες Χρέωσης
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid size={4}>
+                  <TextField
+                    label="Όνομα"
+                    value={`${selectedOrder.billing.first_name} ${selectedOrder.billing.last_name}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={4}>
+                  <TextField
+                    label="Διεύθυνση"
+                    value={`${selectedOrder.billing.address_1}, ${selectedOrder.billing.city}, ${selectedOrder.billing.state}, ${selectedOrder.billing.postcode}, ${selectedOrder.billing.country}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={4}>
+                  <TextField
+                    label="Email"
+                    value={selectedOrder.billing.email}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={4}>
+                  <TextField
+                    label="Τηλέφωνο"
+                    value={selectedOrder.billing.phone}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid size={4}>
-                <TextField
-                  label="Διεύθυνση"
-                  value={`${selectedOrder.billing.address_1}, ${selectedOrder.billing.city}, ${selectedOrder.billing.state}, ${selectedOrder.billing.postcode}, ${selectedOrder.billing.country}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Πληροφορίες Αποστολής
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid size={4}>
+                  <TextField
+                    label="Όνομα"
+                    value={`${selectedOrder.shipping.first_name} ${selectedOrder.shipping.last_name}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={4}>
+                  <TextField
+                    label="Διεύθυνση"
+                    value={`${selectedOrder.shipping.address_1}, ${selectedOrder.shipping.city}, ${selectedOrder.shipping.state}, ${selectedOrder.shipping.postcode}, ${selectedOrder.shipping.country}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid size={4}>
-                <TextField
-                  label="Email"
-                  value={selectedOrder.billing.email}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-              <Grid size={4}>
-                <TextField
-                  label="Τηλέφωνο"
-                  value={selectedOrder.billing.phone}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-            </Grid>
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Πληροφορίες Αποστολής
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={4}>
-                <TextField
-                  label="Όνομα"
-                  value={`${selectedOrder.shipping.first_name} ${selectedOrder.shipping.last_name}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-              <Grid size={4}>
-                <TextField
-                  label="Διεύθυνση"
-                  value={`${selectedOrder.shipping.address_1}, ${selectedOrder.shipping.city}, ${selectedOrder.shipping.state}, ${selectedOrder.shipping.postcode}, ${selectedOrder.shipping.country}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-            </Grid>
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Σημείωση Πελάτη
-            </Typography>
-            <TextField
-              label="Σημείωση Πελάτη"
-              value={selectedOrder.customer_note}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-                style: { fontSize: 12 },
-              }}
-            />
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Στοιχεία Παραγγελίας
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>SKU</TableCell>
-                    <TableCell>Προϊόν</TableCell>
-                    <TableCell>Ποσότητα</TableCell>
-                    <TableCell>Τιμή</TableCell>
-                    <TableCell>Φόρος Υποσυνόλου</TableCell>
-                    <TableCell>Συνολική Τιμή</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {selectedOrder.line_items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{item.sku}</TableCell>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{item.subtotal}</TableCell>
-                      <TableCell>{item.subtotal_tax}</TableCell>
-                      <TableCell>
-                        {(
-                          parseFloat(item.subtotal) +
-                          parseFloat(item.subtotal_tax)
-                        ).toFixed(2)}
-                      </TableCell>
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Σημείωση Πελάτη
+              </Typography>
+              <TextField
+                label="Σημείωση Πελάτη"
+                value={selectedOrder.customer_note}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                  style: { fontSize: 12 },
+                }}
+              />
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Στοιχεία Παραγγελίας
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>SKU</TableCell>
+                      <TableCell>Προϊόν</TableCell>
+                      <TableCell>Ποσότητα</TableCell>
+                      <TableCell>Τιμή</TableCell>
+                      <TableCell>Φόρος Υποσυνόλου</TableCell>
+                      <TableCell>Συνολική Τιμή</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Grid container spacing={2} sx={{ mt: 2 }}>
-              <Grid size={3}>
-                <TextField
-                  label="Συνολική Τιμή Προϊόντων (χωρίς ΦΠΑ)"
-                  value={`${calculateTotalPrice(selectedOrder.line_items)}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
+                  </TableHead>
+                  <TableBody>
+                    {selectedOrder.line_items.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.sku}</TableCell>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.quantity}</TableCell>
+                        <TableCell>{item.subtotal}</TableCell>
+                        <TableCell>{item.subtotal_tax}</TableCell>
+                        <TableCell>
+                          {(
+                            parseFloat(item.subtotal) +
+                            parseFloat(item.subtotal_tax)
+                          ).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid size={3}>
+                  <TextField
+                    label="Συνολική Τιμή Προϊόντων (χωρίς ΦΠΑ)"
+                    value={`${calculateTotalPrice(selectedOrder.line_items)}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={3}>
+                  <TextField
+                    label="Συνολικός Φόρος"
+                    value={`${calculateTotalTax(selectedOrder.line_items)}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={3}>
+                  <TextField
+                    label="Μεταφορικά"
+                    value={`${selectedOrder.shipping_total}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
+                <Grid size={3}>
+                  <TextField
+                    label="Συνολική Τιμή"
+                    value={`${selectedOrder.total}`}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: 12 },
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid size={3}>
-                <TextField
-                  label="Συνολικός Φόρος"
-                  value={`${calculateTotalTax(selectedOrder.line_items)}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <TextField
-                  label="Μεταφορικά"
-                  value={`${selectedOrder.shipping_total}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <TextField
-                  label="Συνολική Τιμή"
-                  value={`${selectedOrder.total}`}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                    style: { fontSize: 12 },
-                  }}
-                />
-              </Grid>
-            </Grid>
 
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Επιλογές
-            </Typography>
-            <Grid size={12} sx={{ textAlign: "right" }}>
-              <Fab
-                onClick={() => {
-                  console.log("123");
-                }}
-                color="success"
-                variant="extended"
-                aria-label="add"
-                sx={{ m: 2, textTransform: "none" }}
-              >
-                <LocalShippingIcon />
-                &nbsp; Αυτοκόλλητο Μεγάλο
-              </Fab>
-              <Fab
-                onClick={() => {
-                  console.log("123");
-                }}
-                color="secondary"
-                variant="extended"
-                aria-label="add"
-                sx={{ m: 2, textTransform: "none" }}
-              >
-                <LocalShippingIcon />
-                &nbsp; Αυτοκόλλητο Mικρό
-              </Fab>
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Επιλογές
+              </Typography>
+              <Grid size={12} sx={{ textAlign: "right" }}>
+                <Fab
+                  onClick={() => {
+                    console.log("123");
+                    handleDownloadAndPrintPdf();
+                  }}
+                  color="success"
+                  variant="extended"
+                  aria-label="add"
+                  sx={{ m: 2, textTransform: "none" }}
+                >
+                  <LocalShippingIcon />
+                  &nbsp; Αυτοκόλλητο Μεγάλο
+                </Fab>
+                <Fab
+                  onClick={() => {
+                    console.log("123");
+                  }}
+                  color="secondary"
+                  variant="extended"
+                  aria-label="add"
+                  sx={{ m: 2, textTransform: "none" }}
+                >
+                  <LocalShippingIcon />
+                  &nbsp; Αυτοκόλλητο Mικρό
+                </Fab>
+              </Grid>
+            </Box>
+          )}
+        </Grid>
+        <Grid size={4}>
+          {loading ? (
+            <Grid
+              container
+              justifyContent="center"
+              alignItems="center"
+              style={{ height: "100%" }}
+            >
+              <CircularProgress />
             </Grid>
-          </Box>
-        )}
-      </Grid>
-      <Grid size={4}>
-        {loading ? (
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            style={{ height: "100%" }}
-          >
-            <CircularProgress />
-          </Grid>
-        ) : rows.length > 0 ? (
-          <div>
+          ) : rows.length > 0 ? (
+            <div>
+              <Grid size={12}>
+                <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
+                  Παραγγελίες σε εκκρεμότητα:{" "}
+                  <Badge badgeContent={rows.length} color="error">
+                    <DvrIcon color="action" />
+                  </Badge>
+                </Typography>
+              </Grid>
+              <Grid size={12} sx={{ textAlign: "center" }}>
+                {processingOrders.map((order) => (
+                  <div
+                    key={order.id}
+                    style={{
+                      border: "1px solid #000",
+                      backgroundColor: "#f0f0f0",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleOrderClick(order)}
+                  >
+                    <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
+                      {order.id} - {order.billing.first_name}{" "}
+                      {order.billing.last_name}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
+                      {dayjs(order.date_created).format("DD/MM/YYYY")} -{" "}
+                      {order.total} - {order.payment_method_title}
+                    </Typography>
+                  </div>
+                ))}
+              </Grid>
+            </div>
+          ) : (
             <Grid size={12}>
               <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
-                Παραγγελίες σε εκκρεμότητα:{" "}
-                <Badge badgeContent={rows.length} color="error">
-                  <DvrIcon color="action" />
-                </Badge>
+                Δεν βρέθηκαν νέες παραγγελίες
               </Typography>
             </Grid>
-            <Grid size={12} sx={{ textAlign: "center" }}>
-              {processingOrders.map((order) => (
-                <div
-                  key={order.id}
-                  style={{
-                    border: "1px solid #000",
-                    backgroundColor: "#f0f0f0",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleOrderClick(order)}
-                >
-                  <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
-                    {order.id} - {order.billing.first_name}{" "}
-                    {order.billing.last_name}
-                  </Typography>
-                  <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
-                    {dayjs(order.date_created).format("DD/MM/YYYY")} -{" "}
-                    {order.total} - {order.payment_method_title}
-                  </Typography>
-                </div>
-              ))}
-            </Grid>
-          </div>
-        ) : (
-          <Grid size={12}>
-            <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
-              Δεν βρέθηκαν νέες παραγγελίες
-            </Typography>
-          </Grid>
-        )}
+          )}
+        </Grid>
       </Grid>
-    </Grid>
+      {selectedOrder && (
+        <Orders_shipping_normal
+          contentRef={contentRef}
+          selectedOrder={selectedOrder}
+        />
+      )}
+    </div>
   );
 }
 

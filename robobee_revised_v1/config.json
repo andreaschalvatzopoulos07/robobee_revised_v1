@@ -2,5 +2,16 @@
     "VITE_API_URL": "https://robobee.gr/index.php/wp-json/wc/v3",
     "VITE_API_CS": "cs_1cf9cb5b540efd5a569a2d0df01857661421241e",
     "VITE_API_CK": "ck_64db285ef0695da45784c88af616b0ce96fd8930",
+    "VITE_API_KATASTIMA": "Κατάστημα Robobee",
+    "VITE_API_SINODEUTIKO_APOSTOLIS_GT": "ΣΥΝΟΔΕΥΤΙΚΟ ΑΠΟΣΤΟΛΗΣ - Γ.Τ: 350447",
+
+    "VITE_API_PHONE1": "+306946684347",
+    "VITE_API_AFM1": "132055334",
+    "VITE_API_NAME1": "Xαλβατζόπουλος Σ. Ανδρέας",
+    "VITE_API_ADDR1": "Ιππολύτου 2 - 26441, Πάτρα",
+    "VITE_API_EMAIL": "info@robobee.gr",
+
+
+
     "VITE_API_VERSION": "1.1.0"
   }

@@ -140,7 +140,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                   textAlign: "left",
                   textDecoration: "underline",
                   color: "blue",
-                  fontWeight: 'bold'
+                  fontWeight: "bold",
                 }}
               >
                 Στοιχεία Αποστολής
@@ -149,7 +149,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                 sx={{
                   fontSize: 10,
                   textAlign: "left",
-                  fontWeight: 'bold'
+                  fontWeight: "bold",
                 }}
               >
                 {selectedOrder.shipping.company} <br />
@@ -182,7 +182,10 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
               </Typography>
             </Grid>
             <Grid container size={6}>
-              <Grid size={12} sx={{ display: "flex", alignItems: "left", height: '5px' }}>
+              <Grid
+                size={12}
+                sx={{ display: "flex", alignItems: "left", height: "5px" }}
+              >
                 <Typography
                   sx={{
                     fontSize: 10,
@@ -199,7 +202,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                     fontSize: 10,
                     textAlign: "left",
                     m: 1,
-                    fontWeight: 'bold'
+                    fontWeight: "bold",
                   }}
                 >
                   {dayjs(selectedOrder.date_created).format("DD/MM/YYYY")}
@@ -209,8 +212,8 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                 size={12}
                 sx={{
                   border: "1px solid",
-                  color: 'blue',
-                  width: '100%',
+                  color: "blue",
+                  width: "100%",
                   m: 2,
                   p: 1,
                   display: "flex",
@@ -222,8 +225,8 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                   sx={{
                     fontSize: 20,
                     textAlign: "center",
-                    color: 'black',
-                    fontWeight: 'bold'
+                    color: "black",
+                    fontWeight: "bold",
                   }}
                 >
                   {selectedOrder.payment_method === "cod"
@@ -234,14 +237,19 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
             </Grid>
           </Grid>
           <Grid container size={12} sx={{ border: "1px solid", mt: 1, p: 1 }}>
-          <Typography
-                  sx={{
-                    fontSize: 10,
-                    fontWeight: 'bold'
-                  }}
-                >
-                  
-                </Typography>
+            <Typography
+              sx={{
+                fontSize: 8,
+                fontWeight: "bold",
+              }}
+            >
+              Σε περίπτωση που κατά την ώρα της παράδοσης παρατηρήσετε οτι το
+              δέμα είναι ανοιγμένο ή σκισμένο έχετε το δικαίωμα να ΑΡΝΗΘΕΙΤΕ την
+              παραλαβή του και να ζητήσετε επιστροφή στο κατάστημα με δικά μας
+              έξοδα. Μετά την παραλαβή αυτό το δικαίωμα χάνεται και ισχύουν οι
+              Όροι & Προϋποθέσεις που βρίσκονται αναρτημμένοι στην ιστοσελίδα
+              μας.
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

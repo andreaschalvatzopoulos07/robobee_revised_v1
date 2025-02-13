@@ -52,12 +52,15 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
   const VITE_API_NAME1 = config.VITE_API_NAME1;
   const VITE_API_ADDR1 = config.VITE_API_ADDR1;
   const VITE_API_EMAIL = config.VITE_API_EMAIL;
+  const VITE_API_EPISTROFI = config.VITE_API_EPISTROFI;
 
   return (
     <div
       ref={contentRef}
       style={{
         position: "absolute",
+        // top: "-10000px",
+        // left: "-10000px",
         width: "180mm", // Match A4 width
         height: "auto",
         background: "#fff",
@@ -107,7 +110,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
               </Typography>
             </Grid>
           </Grid>
-          <Grid container size={12} sx={{ mt: 2 }}>
+          <Grid container size={12} sx={{ mt: 1 }}>
             <Grid size={4}>
               <Typography sx={{ fontSize: 10, textAlign: "left" }}>
                 {VITE_API_NAME1} <br />
@@ -133,7 +136,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
             style={{ border: "1px solid", color: "blue", width: "100%" }}
           ></div>
           <Grid container size={12}>
-            <Grid size={5} sx={{ border: "1px solid", mt: 1, p: 1 }}>
+            <Grid size={6} sx={{ border: "1px solid", mt: 1, p: 1 }}>
               <Typography
                 sx={{
                   fontSize: 10,
@@ -157,7 +160,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                 {selectedOrder.shipping.first_name} <br />
                 {selectedOrder.shipping.address_1} -{" "}
                 {selectedOrder.shipping.postcode} <br />
-                {selectedOrder.shipping.country} <br />
+                {selectedOrder.shipping.city} <br />
                 {selectedOrder.billing.phone} <br />
               </Typography>
 
@@ -168,6 +171,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                   textDecoration: "underline",
                   color: "blue",
                   mt: 1,
+                  fontWeight: "bold",
                 }}
               >
                 Σχόλια
@@ -184,12 +188,15 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
             <Grid container size={6}>
               <Grid
                 size={12}
-                sx={{ display: "flex", alignItems: "left", height: "5px" }}
+                sx={{
+                  p: 1,
+                  mt: 1,
+                  display: "flex",
+                }}
               >
                 <Typography
                   sx={{
                     fontSize: 10,
-                    textAlign: "left",
                     textDecoration: "underline",
                     color: "blue",
                     m: 1,
@@ -200,7 +207,6 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                 <Typography
                   sx={{
                     fontSize: 10,
-                    textAlign: "left",
                     m: 1,
                     fontWeight: "bold",
                   }}
@@ -213,9 +219,8 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                 sx={{
                   border: "1px solid",
                   color: "blue",
-                  width: "100%",
                   m: 2,
-                  p: 1,
+                  p: 2,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -239,16 +244,11 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
           <Grid container size={12} sx={{ border: "1px solid", mt: 1, p: 1 }}>
             <Typography
               sx={{
-                fontSize: 8,
+                fontSize: 7,
                 fontWeight: "bold",
               }}
             >
-              Σε περίπτωση που κατά την ώρα της παράδοσης παρατηρήσετε οτι το
-              δέμα είναι ανοιγμένο ή σκισμένο έχετε το δικαίωμα να ΑΡΝΗΘΕΙΤΕ την
-              παραλαβή του και να ζητήσετε επιστροφή στο κατάστημα με δικά μας
-              έξοδα. Μετά την παραλαβή αυτό το δικαίωμα χάνεται και ισχύουν οι
-              Όροι & Προϋποθέσεις που βρίσκονται αναρτημμένοι στην ιστοσελίδα
-              μας.
+              {VITE_API_EPISTROFI}
             </Typography>
           </Grid>
         </Grid>

@@ -1,10 +1,14 @@
-import { Typography, Box, Button, Stack } from "@mui/material";
+import { Typography, Box, Stack, Fab } from "@mui/material";
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 
 import config from "../../config.json";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
+import PeopleAltTwoToneIcon from '@mui/icons-material/PeopleAltTwoTone';
+import ListAltTwoToneIcon from '@mui/icons-material/ListAltTwoTone';
+import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 
 //const API_URL = config.VITE_API_URL;
 
@@ -44,23 +48,44 @@ function TopNavbar() {
     <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
       <Grid size="grow">
         <Stack spacing={2} direction="row">
-          <Button
-            variant="text"
-            sx={{ textTransform: "none" }}
+          <Fab
+            color="success"
+            variant="extended"
+            aria-label="add"
+            size="small"
+            sx={{textTransform: "none", width: '150px' }}
             onClick={() => navigate("/")}
-          >
+          > <HomeTwoToneIcon /> &nbsp;
             Αρχική
-          </Button>
-          <Button
-            variant="text"
-            sx={{ textTransform: "none" }}
+          </Fab>
+          <Fab
+            color="secondary"
+            variant="extended"
+            aria-label="add"
+            size="small"
+            sx={{textTransform: "none", width: '150px' }}
             onClick={() => navigate("/customers")}
-          >
+          ><PeopleAltTwoToneIcon /> &nbsp; 
             Πελάτες
-          </Button>
-          <Button variant="text" sx={{ textTransform: "none" }}>
-            ΤΒΑ
-          </Button>
+          </Fab>
+          <Fab color="info"
+            variant="extended"
+            aria-label="add"
+            size="small"
+            onClick={() => navigate("/ordersAll")}
+            sx={{textTransform: "none", width: '150px' }}>
+              <ListAltTwoToneIcon /> &nbsp;
+            Παραγγελίες
+          </Fab>
+          <Fab color="error"
+            variant="extended"
+            aria-label="add"
+            size="small"
+            onClick={() => navigate("/settings")}
+            sx={{textTransform: "none", width: '150px' }}>
+              <SettingsTwoToneIcon /> &nbsp;
+            Ρυθμίσεις
+          </Fab>
         </Stack>
       </Grid>
       <Grid>

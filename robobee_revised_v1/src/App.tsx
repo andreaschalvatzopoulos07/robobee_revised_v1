@@ -5,6 +5,7 @@ import Page404 from "./components/Page404";
 import Home from "./pages/orders/Home";
 import Customers from "./pages/customers/Customers";
 import TopNavBar from "./components/TopNavBar";
+import Orders from "./pages/orders/Orders";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="*" element={<Page404 />}></Route>
             <Route path="/" element={<Home />}></Route>
             <Route path="/customers" element={<Customers />}></Route>
+            <Route path="/ordersAll" element={<Orders />}></Route>
           </Routes>
         </Grid>
       </Grid>

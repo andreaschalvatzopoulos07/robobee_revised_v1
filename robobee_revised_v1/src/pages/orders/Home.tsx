@@ -192,7 +192,7 @@ function Home() {
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid size={8}>
+        <Grid size={10}>
           {selectedOrder && (
             <Box component="form" noValidate autoComplete="off">
               <Typography variant="h6" sx={{ mt: 2 }}>
@@ -248,6 +248,9 @@ function Home() {
                   />
                 </Grid>
               </Grid>
+              <div
+                style={{ border: "2px solid", color: "crimson", width: "100%" }}
+              ></div>
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Πληροφορίες Αποστολής
               </Typography>
@@ -276,6 +279,9 @@ function Home() {
                     }}
                   />
                 </Grid>
+                <div
+                  style={{ border: "2px solid", color: "crimson", width: "100%" }}
+                ></div>
               </Grid>
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Σημείωση Πελάτη
@@ -290,6 +296,9 @@ function Home() {
                   style: { fontSize: 12 },
                 }}
               />
+              <div
+                style={{ border: "2px solid", color: "crimson", width: "100%" }}
+              ></div>
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Στοιχεία Παραγγελίας
               </Typography>
@@ -324,6 +333,9 @@ function Home() {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <div
+                style={{ border: "2px solid", color: "crimson", width: "100%" }}
+              ></div>
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid size={3}>
                   <TextField
@@ -374,7 +386,9 @@ function Home() {
                   />
                 </Grid>
               </Grid>
-
+              <div
+                style={{ border: "2px solid", color: "crimson", width: "100%" }}
+              ></div>
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Επιλογές
               </Typography>
@@ -403,7 +417,7 @@ function Home() {
             </Box>
           )}
         </Grid>
-        <Grid size={4}>
+        <Grid size={2}>
           {loading ? (
             <Grid
               container
@@ -434,11 +448,11 @@ function Home() {
                     }}
                     onClick={() => handleOrderClick(order)}
                   >
-                    <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
+                    <Typography sx={{ fontSize: 12, textAlign: "left", m: 2 }}>
                       {order.id} - {order.billing.first_name}{" "}
                       {order.billing.last_name}
                     </Typography>
-                    <Typography sx={{ fontSize: 14, textAlign: "left", m: 2 }}>
+                    <Typography sx={{ fontSize: 12, textAlign: "left", m: 2 }}>
                       {dayjs(order.date_created).format("DD/MM/YYYY")} -{" "}
                       {order.total} - {order.payment_method_title}
                     </Typography>

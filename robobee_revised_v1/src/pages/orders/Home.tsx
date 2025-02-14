@@ -24,7 +24,7 @@ import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
 import DvrIcon from "@mui/icons-material/Dvr";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import Orders_shipping_normal from "./Orders_shipping_normal";
+import Orders_shipping from "./Orders_shipping";
 
 function Home() {
   const API_URL = config.VITE_API_URL;
@@ -94,6 +94,9 @@ function Home() {
   //==========================================================
 
   const contentRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
+  const [gridSize1, setGridSize1] = useState(12);
+  const [gridSize2, setGridSize2] = useState(0);
+  const [marginRight, setMarginRight] = useState(0);
 
   const handleDownloadAndPrintPdf = async () => {
     if (!contentRef.current) return;
@@ -102,7 +105,7 @@ function Home() {
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210; // A4 width
+    const imgWidth = 210 - marginRight; // A4 width minus margin
     const imgHeight = (canvas.height * imgWidth) / canvas.width; // Keep aspect ratio
 
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
@@ -118,6 +121,17 @@ function Home() {
         printWindow.print();
       };
     }
+  };
+
+  const handlePrintButtonClick = (
+    gridSize1: number,
+    gridSize2: number,
+    marginRight: number
+  ) => {
+    setGridSize1(gridSize1);
+    setGridSize2(gridSize2);
+    setMarginRight(marginRight);
+    setTimeout(handleDownloadAndPrintPdf, 100); // Ensure state updates before printing
   };
 
   //==========================================================
@@ -177,7 +191,6 @@ function Home() {
 
   return (
     <div>
-      {" "}
       <Grid container spacing={2}>
         <Grid size={8}>
           {selectedOrder && (
@@ -367,10 +380,7 @@ function Home() {
               </Typography>
               <Grid size={12} sx={{ textAlign: "right" }}>
                 <Fab
-                  onClick={() => {
-                    console.log("123");
-                    handleDownloadAndPrintPdf();
-                  }}
+                  onClick={() => handlePrintButtonClick(12, 0, 0)}
                   color="success"
                   variant="extended"
                   aria-label="add"
@@ -380,9 +390,7 @@ function Home() {
                   &nbsp; Αυτοκόλλητο Μεγάλο
                 </Fab>
                 <Fab
-                  onClick={() => {
-                    console.log("123");
-                  }}
+                  onClick={() => handlePrintButtonClick(9, 0, 4)}
                   color="secondary"
                   variant="extended"
                   aria-label="add"
@@ -448,9 +456,12 @@ function Home() {
         </Grid>
       </Grid>
       {selectedOrder && (
-        <Orders_shipping_normal
+        <Orders_shipping
+          gridSize1={gridSize1}
+          gridSize2={gridSize2}
           contentRef={contentRef}
           selectedOrder={selectedOrder}
+          marginRight={marginRight}
         />
       )}
     </div>

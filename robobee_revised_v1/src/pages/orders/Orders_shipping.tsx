@@ -1,11 +1,23 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import config from "../../../config.json";
-import { Typography } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import dayjs from "dayjs";
 
-interface OrdersShippingNormal {
+interface OrdersShipping {
   contentRef: React.RefObject<HTMLDivElement>;
+  gridSize1: number;
+  gridSize2: number;
+  marginRight: number;
   selectedOrder: {
     id: number;
     total: string;
@@ -36,13 +48,34 @@ interface OrdersShippingNormal {
       email: string;
       phone: string;
     };
+    meta_data: Array<{ id: number; key: string; value: string }>;
+    line_items: Array<{
+      id: number;
+      name: string;
+      product_id: number;
+      variation_id: number;
+      quantity: number;
+      tax_class: string;
+      subtotal: string;
+      subtotal_tax: string;
+      total: string;
+      total_tax: string;
+      taxes: Array<{ id: number; total: string; subtotal: string }>;
+      meta_data: Array<{ id: number; key: string; value: string }>;
+      sku: string;
+      price: number;
+    }>;
+    shipping_total: string;
     // Add other properties of selectedOrder here
   };
 }
 
-const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
+const Orders_shipping: React.FC<OrdersShipping> = ({
   contentRef,
   selectedOrder,
+  gridSize1,
+  gridSize2,
+  marginRight,
 }) => {
   const VITE_API_KATASTIMA = config.VITE_API_KATASTIMA;
   const VITE_API_SINODEUTIKO_APOSTOLIS_GT =
@@ -53,21 +86,43 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
   const VITE_API_ADDR1 = config.VITE_API_ADDR1;
   const VITE_API_EMAIL = config.VITE_API_EMAIL;
   const VITE_API_EPISTROFI = config.VITE_API_EPISTROFI;
+  const tablecellSX = {
+    backgroundColor: "#2196f3",
+    color: "white",
+    fontWeight: "bold",
+  };
+
+  const calculateTotalPrice = (
+    lineItems: OrdersShipping["selectedOrder"]["line_items"]
+  ) => {
+    return lineItems
+      .reduce((total, item) => total + parseFloat(item.total), 0)
+      .toFixed(2);
+  };
+
+  const calculateTotalTax = (
+    lineItems: OrdersShipping["selectedOrder"]["line_items"]
+  ) => {
+    return lineItems
+      .reduce((total, item) => total + parseFloat(item.total_tax), 0)
+      .toFixed(2);
+  };
 
   return (
     <div
       ref={contentRef}
       style={{
         position: "absolute",
-        // top: "-10000px",
-        // left: "-10000px",
-        width: "180mm", // Match A4 width
+        top: "-10000px",
+        left: "-10000px",
+        width: `calc(210mm - ${marginRight}mm)`, // Match A4 width minus margin
         height: "auto",
         background: "#fff",
         padding: "20px",
+        marginRight: `${marginRight}mm`, // Apply margin during printing
       }}
     >
-      <Grid container size={12}>
+      <Grid container size={gridSize1}>
         <Grid
           size={1}
           height={300}
@@ -224,6 +279,7 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  flexDirection: "column",
                 }}
               >
                 <Typography
@@ -235,9 +291,23 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
                   }}
                 >
                   {selectedOrder.payment_method === "cod"
-                    ? `ΑΝΤΙΚΑΤΑΒΟΛΗ: ${selectedOrder.total} € `
+                    ? "ΑΝΤΙΚΑΤΑΒΟΛΗ:"
                     : "ΠΛΗΡΩΜΕΝΟ"}
                 </Typography>
+                {selectedOrder.payment_method === "cod" && (
+                  <Typography
+                    sx={{
+                      fontSize: 20,
+                      textAlign: "center",
+                      color: "black",
+                      fontWeight: "bold",
+                      backgroundColor: 'yellow',
+                      pr: 2, pl: 2
+                    }}
+                  >
+                    {selectedOrder.total} €
+                  </Typography>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -252,9 +322,63 @@ const Orders_shipping_normal: React.FC<OrdersShippingNormal> = ({
             </Typography>
           </Grid>
         </Grid>
+        <Grid container size={12} sx={{ mt: 1 }}>
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={tablecellSX}>SKU</TableCell>
+                  <TableCell sx={tablecellSX}>Προϊόν</TableCell>
+                  <TableCell sx={tablecellSX}>Ποσότητα</TableCell>
+                  <TableCell sx={tablecellSX}>Συνολική Τιμή</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedOrder.line_items.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell sx={{  border: "1px solid",fontSize: 12 }}>{item.sku}</TableCell>
+                    <TableCell sx={{  border: "1px solid",fontSize: 12 }}>{item.name}</TableCell>
+                    <TableCell sx={{  border: "1px solid",fontSize: 12 }}>{item.quantity}</TableCell>
+                    <TableCell sx={{  border: "1px solid",fontSize: 12 }}>
+                      {(
+                        parseFloat(item.subtotal) +
+                        parseFloat(item.subtotal_tax)
+                      ).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Grid
+          container
+          size={12}
+          sx={{
+            mt: 2,
+            pr: 5,
+            justifyContent: "flex-end",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <Typography sx={{ fontSize: 14 }}>
+            Μερικό Σύνολο:&nbsp; &nbsp; {calculateTotalPrice(selectedOrder.line_items)}
+          </Typography>
+          <Typography sx={{ fontSize: 14 }}>
+            ΦΠΑ:&nbsp; &nbsp; {`${calculateTotalTax(selectedOrder.line_items)}`}
+          </Typography>
+          <Typography sx={{ fontSize: 14 }}>
+            Μεταφορικά:&nbsp; &nbsp; {`${selectedOrder.shipping_total}`}
+          </Typography>
+          <Typography sx={{ fontSize: 14, fontWeight: 'bold', color: 'crimson' }}>
+            Σύνολο:&nbsp; &nbsp; {`${selectedOrder.total}`}
+          </Typography>
+        </Grid>
       </Grid>
+      <Grid container size={gridSize2}></Grid>
     </div>
   );
 };
 
-export default Orders_shipping_normal;
+export default Orders_shipping;

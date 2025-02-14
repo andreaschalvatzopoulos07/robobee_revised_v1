@@ -5,7 +5,7 @@ import Page404 from "./components/Page404";
 import Home from "./pages/orders/Home";
 import Customers from "./pages/customers/Customers";
 import TopNavBar from "./components/TopNavBar";
-import Orders from "./pages/orders/Orders";
+import OrdersAll from "./pages/orders/OrdersAll";
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
             <Route path="*" element={<Page404 />}></Route>
             <Route path="/" element={<Home />}></Route>
             <Route path="/customers" element={<Customers />}></Route>
-            <Route path="/ordersAll" element={<Orders />}></Route>
+            <Route path="/ordersAll" element={<OrdersAll />}></Route>
           </Routes>
         </Grid>
       </Grid>
